@@ -3,17 +3,20 @@ pipeline {
     stages {
         stage('OWASP Dependency-Check Vulnerabilities') {
             steps {
-                dependencyCheck additionalArguments: '''
-                    -o './'
-                    -s './'
-                    -f 'ALL'
-                    --prettyPrint
-                ''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
-                
-                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
+                    dependencyCheck additionalArguments: '''
+                        -o './'
+                        -s './'
+                        -f 'ALL'
+                        --prettyPrint
+                        --nvd-api-key '${NVD_API_KEY}'
+                    ''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+                    
+                    dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                }
             }
         }
-    }
+    }    
     post {
         success {
             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
