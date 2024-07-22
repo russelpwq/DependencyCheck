@@ -9,7 +9,7 @@ pipeline {
                         -s './'
                         -f 'ALL'
                         --prettyPrint
-                        --nvd-api-key '${NVD_API_KEY}'
+                        --nvdApiKey '${NVD_API_KEY}'
                     ''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
                     
                     dependencyCheckPublisher pattern: 'dependency-check-report.xml'
